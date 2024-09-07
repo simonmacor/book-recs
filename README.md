@@ -1,3 +1,4 @@
+[![CI](https://github.com/simonmacor/book-recs/actions/workflows/ci.yml/badge.svg)](https://github.com/simonmacor/book-recs/actions/workflows/ci.yml)
 # Book Recommender System
 
 This project implements a book recommendation system based on user preferences, such as theme, period of the author, and literary style. It is built using **SQLAlchemy** for database management and **PyTorch** for training the neural network model that recommends books to users. **Alembic** is used for database migrations.
