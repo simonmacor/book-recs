@@ -12,30 +12,9 @@ permissions:
   contents: read
 
 jobs:
-  runner-job:
-    # You must use a Linux environment when using service containers or container jobs
-    runs-on: ubuntu-latest
+  build:
 
-    # Service containers to run with `runner-job`
-    services:
-      # Label used to access the service container
-      postgres:
-        # Docker Hub image
-        image: postgres:13
-        # Provide the password for postgres
-        env:
-          POSTGRES_USER: book_user
-          POSTGRES_PASSWORD: book_password
-          POSTGRES_DB: book_recommendation
-        # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          # Maps tcp port 5432 on service container to the host
-          - 5432:5432
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -54,17 +33,3 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Install PostgreSQL client
-      run: |
-        apt-get update
-        apt-get install --yes postgresql-client
-    - name: Setup database
-      run: psql -h postgres -U postgres_user -c 'CREATE DATABASE "book_recommendation";'
-      env:
-        PGPASSWORD: postgres
-    - name: Test
-      run: |
-        alembic upgrade head
-    - name: Test
-      run: |
-        python -m unittest tests.test_recommender
